@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import kotlin.collections.emptyList
 
 class FacilitySearchViewModel(private val repo: FacilityRepository) : ViewModel() {
     private val _selectedDivision = MutableStateFlow<DivisionEntity?>(null)

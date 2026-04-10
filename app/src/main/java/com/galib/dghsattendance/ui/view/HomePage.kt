@@ -19,14 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.galib.dghsattendance.R
-import com.galib.dghsattendance.domain.SnackbarEvent
-import com.galib.dghsattendance.domain.SnackbarManager
 import com.galib.dghsattendance.data.AttendanceApi
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomePage(backStack: NavBackStack<NavKey>) {
-    val scope = rememberCoroutineScope()
     Scaffold(
         floatingActionButton = {
             FilledIconButton(onClick = {

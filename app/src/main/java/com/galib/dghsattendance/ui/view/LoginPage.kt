@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.galib.dghsattendance.R
-import com.galib.dghsattendance.domain.SnackbarEvent
-import com.galib.dghsattendance.domain.SnackbarManager
 import com.galib.dghsattendance.data.ApiResult
 import com.galib.dghsattendance.data.AttendanceApi
+import com.galib.dghsattendance.domain.SnackbarEvent
+import com.galib.dghsattendance.domain.SnackbarManager
 import com.galib.dghsattendance.ui.theme.AppTypography
 import kotlinx.coroutines.launch
 

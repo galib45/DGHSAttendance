@@ -99,7 +99,7 @@ object AttendanceApi {
                                 callback(ApiResult.Error(ApiException.ServerError()))
                             }
                             else -> {
-                                println("HTTP code: ${it.code}");
+                                println("HTTP code: ${it.code}")
                                 callback(ApiResult.Error(ApiException.HttpError(it.code)))
                             }
                         }

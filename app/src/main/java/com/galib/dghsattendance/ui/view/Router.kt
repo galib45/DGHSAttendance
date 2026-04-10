@@ -23,8 +23,8 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.galib.dghsattendance.App
 import com.galib.dghsattendance.data.FacilityReport
-import com.galib.dghsattendance.domain.SnackbarManager
 import com.galib.dghsattendance.data.IndividualReport
+import com.galib.dghsattendance.domain.SnackbarManager
 import com.galib.dghsattendance.ui.theme.AppTheme
 import com.galib.dghsattendance.ui.viewmodel.FacilitySearchViewModel
 import com.galib.dghsattendance.ui.viewmodel.SplashViewModel

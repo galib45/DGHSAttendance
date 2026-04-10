@@ -2,7 +2,6 @@ package com.galib.dghsattendance.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlin.collections.emptyList
 
 class FacilityRepository(private val db: FacilityDatabase) {
     fun getDivisions(): Flow<List<DivisionEntity>> =

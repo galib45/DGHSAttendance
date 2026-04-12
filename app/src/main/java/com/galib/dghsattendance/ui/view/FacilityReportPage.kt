@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.galib.dghsattendance.R
@@ -317,38 +316,22 @@ private fun StaffEntryCard(entry: FacilityReportEntry) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
-            if (entry.status.lowercase() == "present") {
-                Spacer(modifier = Modifier.height(6.dp))
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(6.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    TimeInfoItem(label = "In", value = entry.inTime)
-                    TimeInfoItem(label = "Out", value = entry.outTime)
-                    TimeInfoItem(label = "Duration", value = entry.duration)
-                    TimeInfoItem(label = "Type", value = entry.type)
-                }
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                TimeItem("In", entry.inTime)
+                TimeItem("Out", entry.outTime)
+                TimeItem("Duration", entry.duration)
             }
         }
     }
 }
 
 @Composable
-private fun TimeInfoItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = value.ifBlank { "—" },
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 13.sp
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+private fun TimeItem(label: String, value: String) {
+    Column {
+        Text(label, style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value.ifBlank { "—" }, style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Medium)
     }
 }

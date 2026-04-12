@@ -88,12 +88,20 @@ object ReportParser {
         val tables = document.select("div#ptable3 table")
         val summaryTable = tables.first()
         val detailsTable = tables.last()
-        val summary = summaryTable?.let {
+        var summary = summaryTable?.let {
             parseFacilityReportSummary(summaryTable)
         }
-        val details = detailsTable?.let {
-            parseFacilityReportDetails(detailsTable)
-        } ?: emptyList()
+        var details = emptyList<FacilityReportEntry>()
+        detailsTable?.let {
+            val result = parseFacilityReportDetails(detailsTable)
+            details = result.first
+            val (present, absent, leave) = result.second
+            summary = summary?.copy(
+                present = present.toString(),
+                absent = absent.toString(),
+                leave = leave.toString(),
+            )
+        }
 
         return FacilityReport(summary, details)
     }
@@ -147,9 +155,13 @@ object ReportParser {
         )
     }
 
-    private fun parseFacilityReportDetails(table: Element) : List<FacilityReportEntry> {
+    private fun parseFacilityReportDetails(table: Element)
+    : Pair<List<FacilityReportEntry>, Triple<Int, Int, Int>> {
         val details = mutableListOf<FacilityReportEntry>()
         val rows = table.select("tbody > tr")
+        var present = 0
+        var absent = 0
+        var leave = 0
         for (row in rows) {
             val cells = row.select("td")
             val hrisId = cells[1].text()
@@ -161,10 +173,16 @@ object ReportParser {
             val type = cells[7].text()
             val status = cells[8].text()
 
+            when(type.lowercase()) {
+                "present" -> present++
+                "absent" -> absent++
+                "leave" -> leave++
+            }
+
             details.add(FacilityReportEntry(
                 name, hrisId, designation, inTime, outTime, duration, type, status
             ))
         }
-        return details
+        return Pair(details, Triple(present, absent, leave))
     }
 }

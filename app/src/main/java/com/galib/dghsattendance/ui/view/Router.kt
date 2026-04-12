@@ -2,6 +2,7 @@ package com.galib.dghsattendance.ui.view
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -12,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,19 +24,20 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.galib.dghsattendance.App
+import com.galib.dghsattendance.data.ApiResult
+import com.galib.dghsattendance.data.AttendanceApi
 import com.galib.dghsattendance.data.FacilityReport
 import com.galib.dghsattendance.data.IndividualReport
+import com.galib.dghsattendance.domain.SnackbarEvent
 import com.galib.dghsattendance.domain.SnackbarManager
 import com.galib.dghsattendance.ui.theme.AppTheme
 import com.galib.dghsattendance.ui.viewmodel.FacilitySearchViewModel
-import com.galib.dghsattendance.ui.viewmodel.SplashViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Composable
 fun Router() {
     val backStack = rememberNavBackStack(RouteSplash)
-//    val backStack = rememberNavBackStack(RouteFacilitySearch)
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
@@ -61,6 +64,36 @@ fun Router() {
         }
     }
 
+    LifecycleResumeEffect(Unit) {
+        backStack.clear()
+        backStack.add(RouteSplash)
+        AttendanceApi.checkIfLoggedIn { result ->
+            backStack.clear()
+            when (result) {
+                is ApiResult.Success -> {
+                    backStack.add(RouteHome)
+                }
+
+                is ApiResult.Error -> {
+                    scope.launch {
+                        SnackbarManager.sendEvent(
+                            SnackbarEvent(
+                                result.exception.message ?: "",
+                                duration = SnackbarDuration.Long
+                            )
+                        )
+                    }
+                    backStack.add(RouteLogin)
+                }
+
+                is ApiResult.Redirect -> {
+                    backStack.add(RouteLogin)
+                }
+            }
+        }
+        onPauseOrDispose {  }
+    }
+
     AppTheme(dynamicColor = false) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -75,7 +108,7 @@ fun Router() {
                 ),
                 entryProvider = entryProvider {
                     entry<RouteSplash> {
-                        SplashPage(backStack, viewModel(factory = SplashViewModel.Factory()))
+                        SplashPage(backStack)
                     }
                     entry<RouteHome> { HomePage(backStack) }
                     entry<RouteLogin> { LoginPage(backStack) }

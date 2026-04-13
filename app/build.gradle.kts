@@ -15,8 +15,8 @@ android {
         applicationId = "com.galib.dghsattendance"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.5"
+        versionCode = 6
+        versionName = "1.5.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,10 +39,10 @@ android {
     buildFeatures {
         compose = true
     }
+}
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

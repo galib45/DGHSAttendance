@@ -65,13 +65,12 @@ fun Router() {
     }
 
     LifecycleResumeEffect(Unit) {
-        backStack.clear()
-        backStack.add(RouteSplash)
+        if (backStack.last() != RouteSplash) backStack.add(RouteSplash)
         AttendanceApi.checkIfLoggedIn { result ->
-            backStack.clear()
             when (result) {
                 is ApiResult.Success -> {
-                    backStack.add(RouteHome)
+                    if (backStack.size == 1) backStack[0] = RouteHome
+                    else backStack.removeLastOrNull()
                 }
 
                 is ApiResult.Error -> {
@@ -83,10 +82,12 @@ fun Router() {
                             )
                         )
                     }
+                    backStack.clear()
                     backStack.add(RouteLogin)
                 }
 
                 is ApiResult.Redirect -> {
+                    backStack.clear()
                     backStack.add(RouteLogin)
                 }
             }
